@@ -1,4 +1,4 @@
-package com.product.service;
+package com.task.Product.service;
 
 import java.util.List;
 import java.util.Optional;
@@ -6,66 +6,55 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.product.entity.Product;
-//import com.product.service.ProductService;
-import com.product.repository.ProductRepository;
+import com.task.Product.entity.Product;
+import com.task.Product.repo.ProductRepo;
 
 @Service
 public class ProductServiceImpl implements ProductService {
-	
-	@Autowired
-	ProductRepository productRepository;
+@Autowired
+private ProductRepo productRepo;
 
+	@Override
 	public String addProduct(Product product) {
-		productRepository.save(product);
-		return "product added Successfully with id" +  product.getId(); 
-	}
-
-	public String updateProduct(String id, Product product) {
-		Optional<Product> Container = productRepository.findById(id);
-		if (Container.isPresent()) {
-			Product n = Container.get();
-			n.setId(product.getId());
-			n.setProductName(product.getProductName());
-		    n.setProductColor(product.getProductColor());
-		    n.setProductPrice(product.getProductPrice());
-		    n.setProductSeller(product.getProductSeller());
-		    n.setProductBrand(product.getProductBrand());
-		    
-		  
-		    
-			
-			productRepository.save(n);
-			return "Product Updated Successfully with"+ id ;
-		} else {
-			return "Id not found";
-		}
-	}
-
-	public String deleteProduct(String id) {
-		java.util.Optional<Product> Container = productRepository.findById(id);
-		if (Container.isPresent()) {
-			Product cust =Container.get();
-			productRepository.delete(cust);
-			return " Product Deleted Successfully"+  id;
-		} else {
-			return "not found";
-		}
-	}
-
-	public Product findProduct(String id) {
-		return productRepository.findById(id).get();
-	}
-
-	public List<Product> findAllproduct() {
-		return productRepository.findAll();
+		productRepo.save(product);
+		return "Product added Successfully with id"+ product.getId() ;
 	}
 
 	@Override
-	public List<Product> findAllProduct() {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Product> findallProducts() {
+		return productRepo.findAll();
+		
 	}
 
+	@Override
+	public Product findProduct(int id) {
+	return productRepo.findById(id).get();
+		
+	}
+	  @Override
+	    public String deleteProduct(int id)  {
+	        productRepo.deleteById(id);
+	        return "Product Deleted Successfuly with id"+id;
+	    }
+
+
+	@Override
+	public String updateProduct(int id, Product product) {
+		Optional<Product> Container = productRepo.findById(id);
+		if(Container.isPresent()) {
+			Product n=Container.get();
+			n.setId(product.getId());
+			n.setProduct_name(product.getProduct_name());
+			n.setQuantity(product.getQuantity());
+			n.setDescription(product.getDescription());
+			n.setPrice(product.getPrice());
+			productRepo.save(n);
+			return "Product updated succesfully with id"+ id;
+		}
+		else {
+			return "Id not found";
+		}
+		
+	}
 
 }
